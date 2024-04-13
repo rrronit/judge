@@ -80,6 +80,8 @@ const init = async (code) => {
 
     const batchSize = 20;
     for (let i = 0; i < testCases.length; i += batchSize) {
+
+        //will add time and memory constraint later
         const batchSubmissions = testCases.slice(i, i + batchSize).map((cases) => ({
             source_code: code,
             language_id: 71,
