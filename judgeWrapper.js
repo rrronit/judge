@@ -1,6 +1,7 @@
 const { default: axios } = require("axios");
 
 class Judge {
+    
     constructor(api) {
         this.apiBaseUrl = api;
     }
@@ -10,19 +11,19 @@ class Judge {
             console.log('getLanguageId');
             const response = await axios.get(`${this.apiBaseUrl}/languages`);
             const languages = response.data;
-            const language = languages.find((language) =>
+            const language = languages.filter((language) =>
                 language.name.toLowerCase().includes(languageName.toLowerCase())
             );
             if (!language) {
                 throw new Error(`Language not found: ${languageName}`);
             }
-            return language.id;
+            return language;
         } catch (error) {
             throw new Error(`Failed to get language ID: ${error.message}`);
         }
     }
 
-    async submitCode(sourceCode, languageId, stdin = '', expectedOutput = '') {
+    async submitCode(sourceCode, languageId, stdin = '', expectedOutput = null) {
         try {
             const response = await axios.post(`${this.apiBaseUrl}/submissions`, {
                 source_code: sourceCode,
@@ -37,17 +38,10 @@ class Judge {
     }
 
 
-    async getSubmissionDetails(submissionId, timeout = 10000, base64Encoded = false, fields = 'stdout,time,memory,stderr,token,compile_output,message,status') {
+    async getSubmissionDetails(submissionId,base64Encoded = false, fields = 'stdout,time,memory,stderr,token,compile_output,message,status') {
         try {
-            const config = {
-                timeout: timeout,
-                timeoutErrorMessage: `Request to get submission details timed out after ${timeout / 1000} seconds`,
-                params: {
-                    base64_encoded: base64Encoded,
-                    fields,
-                },
-            };
-            const response = await axios.get(`${this.apiBaseUrl}/submissions/${submissionId}`, config);
+           
+            const response = await axios.get(`${this.apiBaseUrl}/submissions/${submissionId}`,);
             return response.data;
         } catch (error) {
             if (error.code === 'ECONNABORTED') {
@@ -56,8 +50,9 @@ class Judge {
             throw new Error(`Failed to get submission details: ${error.message}`);
         }
     }
-    async getSubmissions(
-        { base64Encoded = false, fields = 'stdout,time,memory,stderr,token,compile_output,message,status', page = 1, perPage = 20 } = {}
+
+    
+    async getSubmissions({ base64Encoded = false, fields = 'stdout,time,memory,stderr,token,compile_output,message,status', page = 1, perPage = 20 } = {}
     ) {
         try {
             const response = await axios.get(`${this.apiBaseUrl}/submissions`, {
@@ -102,6 +97,22 @@ class Judge {
         } catch (error) {
             throw new Error(`Failed to get batch submissions: ${error.message}`);
         }
+    }
+
+    async submitAndgetResult(sourceCode, languageId, stdin = '', expectedOutput = null){
+        try {
+            const response = await axios.post(`${this.apiBaseUrl}/submissions`, {
+                source_code: sourceCode,
+                language_id: languageId,
+                stdin: stdin,
+                wait:"true",
+                expected_output: expectedOutput,
+            });
+            return response.data;
+        } catch (error) {
+            throw new Error(`Failed to submit code: ${error.message}`);
+        }
+
     }
 
     async getStatuses() {
