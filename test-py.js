@@ -6,11 +6,14 @@ const code = `
 class Solution:
     def two_sum(self, nums, target):
         num_dict = {}
+        print("jsdff")
         for i, num in enumerate(nums):
+
             complement = target - num
             if complement in num_dict:
                 return [num_dict[complement], i]
             num_dict[num] = i
+
         return None
 
 import json
@@ -19,16 +22,14 @@ from io import StringIO
 
 def _driver():
     sol = Solution()
-    for i in range(73):
+    for i in range(250):
         try:
             captured_prints = StringIO()
             nums = eval(input())
             target = int(input())
-
             sys.stdout = captured_prints
             result=sol.two_sum(nums, target)
             sys.stdout = sys.__stdout__
-
             if result is None:
               result = "None"
             print(json.dumps({"nums": nums, "target": target, "output": result,"stdout": captured_prints.getvalue()}))
@@ -43,7 +44,7 @@ if __name__ == '__main__':
      
 
 `;
-const judge = new Judge('https://judge.ronit.live');
+const judge = new Judge('https://judge0.ronit.live');
 
 const init = async (code) => {
   const submit = await judge.submitCode(code, 71, `${testCases.map(testCase => testCase.nums + "\n" + testCase.target).join("\n")}`)
@@ -53,8 +54,9 @@ const init = async (code) => {
   testResult = testResult.stdout.trim().split('\n')
 
   const res = testResult.map(objString => JSON.parse(objString));
-
+  
   console.log(res);
+  
 
 
 }
@@ -74,7 +76,7 @@ const getTime = async () => {
   let totalTime = 0
   console.log("testcase count", testCases.length)
 
-  const numberofTimes =20
+  const numberofTimes=1
 
   for (i = 1; i <= numberofTimes; i++) {
       const startTime = performance.now();

@@ -25,13 +25,7 @@ def _driver():
     try:
         nums = eval(input())
         target = int(input())
-
-        captured_prints = StringIO()
-        sys.stdout = captured_prints
-
-        result=sol.two_sum(nums, target)
-        
-        sys.stdout = sys.__stdout__
+        result=sol.two_sum(nums, target)        
 
         if result is None:
             result = "None"
@@ -48,9 +42,9 @@ if __name__ == '__main__':
 
 
 const init = async (code) => {
-    const judge = new Judge('https://judge.ronit.live');
+    const judge = new Judge('https://judge0.ronit.live');
 
-    const batchSize = 20;
+    const batchSize = 50;
 
     for (let i = 0; i < testCases.length; i += batchSize) {
 
@@ -59,7 +53,8 @@ const init = async (code) => {
             source_code: code,
             language_id: 71,
             stdin: cases.nums + "\n" + cases.target,
-            expected_output: cases.expected
+            expected_output: cases.expected,
+                
         }));
 
         const batchResponse = await judge.createBatchSubmissions(batchSubmissions);
@@ -93,7 +88,7 @@ const getTime = async () => {
     let totalTime = 0
     console.log("testcase count", testCases.length)
 
-    const numberofTimes = 2
+    const numberofTimes = 1
 
     for (i = 1; i <= numberofTimes; i++) {
         const startTime = performance.now();
